@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><meta name="generator" content="MATLAB 2024a"><title>Data Logging for 'frestimate'</title><style type="text/css">.rtcContent { padding: 30px; } .S0 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 28.8px; min-height: 0px; white-space: pre-wrap; color: rgb(192, 76, 11); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 24px; font-weight: 400; text-align: left;  }
+.S1 { margin: 2px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S2 { margin: 20px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S3 { margin: 15px 10px 5px 4px; padding: 0px; line-height: 18px; min-height: 0px; white-space: pre-wrap; color: rgb(33, 33, 33); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 17px; font-weight: 700; text-align: left;  }
+.S4 { margin: 10px 0px 20px; padding-left: 0px; font-family: Helvetica, Arial, sans-serif; font-size: 14px;  }
+.S5 { margin-left: 56px; line-height: 21px; min-height: 0px; text-align: left; white-space: pre-wrap;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Data Logging for 'frestimate'</span></h1><div  class = 'S1'><span>The </span><span style=' font-weight: bold;'>Data Logging for 'frestimate'</span><span> subsystem in the model provided with this example collects the data the frequency response experiment data based on during the frequency-response estimation experiment, including the perturbation signal applied to the plant and the measured plant response. You can use the data from this port to perform the frequency-response estimation offline. For instance, you can compute the estimated frequency response in MATLAB® by passing the structure to the </span><span style=' font-family: monospace;'>frestimate</span><span> command.</span></div><h2  class = 'S2'><span>Input Ports</span></h2><h3  class = 'S3'><span>Plant Input</span></h3><div  class = 'S1'><span>Connect the plant input signal </span><span style=' font-family: monospace;'>u + Δu</span><span> to this port.</span></div><h3  class = 'S3'><span>Perturbation</span></h3><div  class = 'S1'><span>Connect the perturbation signal </span><span style=' font-family: monospace;'>Δu</span><span> from the signal generator blocks to this port.</span></div><h3  class = 'S3'><span>Plant Output</span></h3><div  class = 'S1'><span>Connect the plant output signal </span><span style=' font-family: monospace;'>y</span><span> to this port.</span></div><h3  class = 'S3'><span>start/stop</span></h3><div  class = 'S1'><span>Connect the </span><span style=' font-weight: bold;'>start/stop</span><span> signal used for starting and stopping the signal generation.</span></div><h3  class = 'S3'><span>Frequency Index</span></h3><div  class = 'S1'><span>For sinestream signals only. Connect the </span><span style=' font-weight: bold;'>idx w</span><span> output of the Sinestream Signal Generator block to this port.</span></div><h2  class = 'S2'><span>Output Ports</span></h2><h3  class = 'S3'><span>Data </span></h3><div  class = 'S1'><span>There are two ways to access the frequency response experiment data.</span></div><div  class = 'S1'><span>Use a To Workspace block to write the data to the MATLAB®</span><span> </span><span>workspace as a structure containing timeseries data. The</span><span> </span><span style=' font-weight: bold;'>Save format</span><span> </span><span>parameter of the</span><span> </span><span>To Workspace</span><span> </span><span>block must be</span><span> </span><span style=' font-family: monospace;'>Timeseries</span><span>. The structure has the following fields:</span></div><ul  class = 'S4'><li  class = 'S5'><span style=' font-family: monospace;'>Ready</span><span> </span><span>— Logical signal indicating which time steps are included in the estimation computation (1) and which are excluded (0). For instance, for sinestream mode, this signal is 1 only for data that falls within the periods determined by the</span><span> </span><span style=' font-weight: bold;'>Number of settling periods</span><span> </span><span>and</span><span> </span><span style=' font-weight: bold;'>Number of estimation periods</span><span> </span><span>parameters. For PRBS signals, this is 1 only for data that falls within the actual experiment length.</span></li><li  class = 'S5'><span style=' font-family: monospace;'>Perturbation</span><span> </span><span>— Sinusoidal perturbations</span><span> </span><span style=' font-family: monospace;'>Δu</span><span> </span><span>applied to the plant</span></li><li  class = 'S5'><span style=' font-family: monospace;'>PlantInput</span><span> </span><span>— Plant input signal</span><span> </span><span style=' font-family: monospace;'>u + Δu</span><span>, where</span><span> </span><span style=' font-family: monospace;'>u</span><span> </span><span>is the signal collected at the block input port</span><span> </span><span style=' font-weight: bold;'>y</span></li><li  class = 'S5'><span style=' font-family: monospace;'>PlantOutput</span><span> </span><span>— Plant output signal collected at block input port</span><span> </span><span style=' font-weight: bold;'>y</span></li></ul><div  class = 'S1'><span>Use Simulink data logging to write the data to the workspace as a</span><span> </span><span style=' font-family: monospace;'>Simulink.SimulationData.Dataset</span><span> </span><span>object. In this case, the structure containing the four timeseries signals is stored in the</span><span> </span><span style=' font-family: monospace;'>Values</span><span> </span><span>field of the resulting dataset. For instance, suppose that the model is configured to save the logged data to a variable</span><span> </span><span style=' font-family: monospace;'>logsout</span><span>, and</span><span> </span><span style=' font-weight: bold;'>data</span><span> </span><span>is the only logged port. In that case, the structure is contained in</span><span> </span><span style=' font-family: monospace;'>logsout{1}.Values</span><span>.</span></div><h2  class = 'S2'><span>Parameters</span></h2><h3  class = 'S3'><span style=' font-weight: bold;'>Sample Time (Ts)</span></h3><div  class = 'S1'><span>Specify the experiment sample time. This sample time must match the sample time of the signal generator blocks.</span></div><h3  class = 'S3'><span>Input Signal Type</span></h3><div  class = 'S1'><span>Specify the input perturbation signal type, as </span><span style=' font-family: monospace;'>Sinestream</span><span> or </span><span style=' font-family: monospace;'>PRBS</span><span>, based on the signal generator block you are using.</span></div><h3  class = 'S3'><span>Frequencies Vector</span></h3><div  class = 'S1'><span>For sinestream signals, specify the perturbation frequencies. This value must be the same as frequency values specified in the Sinestream Signal Generator block.</span></div><h3  class = 'S3'><span>Number of Settling Periods</span></h3><div  class = 'S1'><span>For sinestream signals, use this parameter to specify how long to wait at each frequency before beginning estimation at that frequency. Waiting allows any transients in the plant response to decay away, improving the accuracy of the estimated frequency response. Waiting for more periods can improve the accuracy of the estimation, but also increases the experiment time.</span></div><h3  class = 'S3'><span>Number of Estimation Periods</span></h3><div  class = 'S1'><span>For sinestream signals, use this parameter to specify how many periods of injected signal to use for the estimation at each frequency. Using more periods can improve the accuracy of the estimation, but also increases the experiment time.</span></div><h3  class = 'S3'><span>Number of PRBS Signal Periods</span></h3><div  class = 'S1'><span>For PRBS signals, use this parameter to specify the PRBS signal period.</span></div>
+<br>
+<!-- 
+##### SOURCE BEGIN #####
+%% Data Logging for 'frestimate'
+% The *Data Logging for 'frestimate'* subsystem in the model provided with this 
+% example collects the data the frequency response experiment data based on during 
+% the frequency-response estimation experiment, including the perturbation signal 
+% applied to the plant and the measured plant response. You can use the data from 
+% this port to perform the frequency-response estimation offline. For instance, 
+% you can compute the estimated frequency response in MATLAB® by passing the structure 
+% to the |frestimate| command.
+%% Input Ports
+% Plant Input
+% Connect the plant input signal |u + Δu| to this port.
+% Perturbation
+% Connect the perturbation signal |Δu| from the signal generator blocks to this 
+% port.
+% Plant Output
+% Connect the plant output signal |y| to this port.
+% start/stop
+% Connect the *start/stop* signal used for starting and stopping the signal 
+% generation.
+% Frequency Index
+% For sinestream signals only. Connect the *idx w* output of the Sinestream 
+% Signal Generator block to this port.
+%% Output Ports
+% Data 
+% There are two ways to access the frequency response experiment data.
+% 
+% Use a To Workspace block to write the data to the MATLAB® workspace as a structure 
+% containing timeseries data. The *Save format* parameter of the To Workspace 
+% block must be |Timeseries|. The structure has the following fields:
+%% 
+% * |Ready| — Logical signal indicating which time steps are included in the 
+% estimation computation (1) and which are excluded (0). For instance, for sinestream 
+% mode, this signal is 1 only for data that falls within the periods determined 
+% by the *Number of settling periods* and *Number of estimation periods* parameters. 
+% For PRBS signals, this is 1 only for data that falls within the actual experiment 
+% length.
+% * |Perturbation| — Sinusoidal perturbations |Δu| applied to the plant
+% * |PlantInput| — Plant input signal |u + Δu|, where |u| is the signal collected 
+% at the block input port *y*
+% * |PlantOutput| — Plant output signal collected at block input port *y*
+%% 
+% Use Simulink data logging to write the data to the workspace as a |Simulink.SimulationData.Dataset| 
+% object. In this case, the structure containing the four timeseries signals is 
+% stored in the |Values| field of the resulting dataset. For instance, suppose 
+% that the model is configured to save the logged data to a variable |logsout|, 
+% and *data* is the only logged port. In that case, the structure is contained 
+% in |logsout{1}.Values|.
+%% Parameters
+% *Sample Time (Ts)*
+% Specify the experiment sample time. This sample time must match the sample 
+% time of the signal generator blocks.
+% Input Signal Type
+% Specify the input perturbation signal type, as |Sinestream| or |PRBS|, based 
+% on the signal generator block you are using.
+% Frequencies Vector
+% For sinestream signals, specify the perturbation frequencies. This value must 
+% be the same as frequency values specified in the Sinestream Signal Generator 
+% block.
+% Number of Settling Periods
+% For sinestream signals, use this parameter to specify how long to wait at 
+% each frequency before beginning estimation at that frequency. Waiting allows 
+% any transients in the plant response to decay away, improving the accuracy of 
+% the estimated frequency response. Waiting for more periods can improve the accuracy 
+% of the estimation, but also increases the experiment time.
+% Number of Estimation Periods
+% For sinestream signals, use this parameter to specify how many periods of 
+% injected signal to use for the estimation at each frequency. Using more periods 
+% can improve the accuracy of the estimation, but also increases the experiment 
+% time.
+% Number of PRBS Signal Periods
+% For PRBS signals, use this parameter to specify the PRBS signal period.
+##### SOURCE END #####
+-->
+</div></body></html>
